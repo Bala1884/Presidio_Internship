@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as commentService from "../services/comment.service"
-export const getAllUser=async(req:FastifyRequest,reply:FastifyReply)=>{
+export const getAllComments=async(req:FastifyRequest,reply:FastifyReply)=>{
   try {
       const comments = await commentService.getAllComment();
       return reply.send(comments);
