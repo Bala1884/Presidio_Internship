@@ -1,18 +1,25 @@
 import Fastify, { FastifyReply, FastifyRequest } from 'fastify';
 import { userRouter } from './routes/user.route';
 import redisPlugin from './plugins/redis';
+import multipart from '@fastify/multipart';
 
 import dotenv from 'dotenv';
 import db from './models/index';
 import fastify_jwt from "@fastify/jwt";
 import { postRouter } from './routes/post.route';
 import { commentRouter } from './routes/comment.route';
+import cors from '@fastify/cors'
 dotenv.config();
 
 const fastify = Fastify({ logger: true });
 
+await fastify.register(cors);
+
 fastify.register(fastify_jwt, {
   secret: process.env.JWT_SECRET as string,
+});
+fastify.register(multipart, {
+  attachFieldsToBody: false, // required when using .parts()
 });
 
 fastify.register(redisPlugin);

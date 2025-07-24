@@ -27,3 +27,55 @@ docker-compose.override.yml
 # OS-specific
 .DS_Store
 Thumbs.db
+
+
+
+-- E-commerce Sales and Purchases Analysis
+-- Alternative approach using variables for ranking (MySQL compatible)
+
+SELECT 
+    order_type,
+    product_name,
+    total_orders,
+    average_order_price
+FROM (
+    SELECT 
+        order_type,
+        product_name,
+        total_orders,
+        average_order_price,
+        @row_number := CASE 
+            WHEN @prev_order_type = order_type THEN @row_number + 1
+            ELSE 1
+        END AS rn,
+        @prev_order_type := order_type
+    FROM (
+        SELECT 
+            order_type,
+            product_name,
+            COUNT(*) as total_orders,
+            ROUND(AVG(price), 2) as average_order_price
+        FROM (
+            SELECT 
+                'Buy' as order_type,
+                product_name,
+                price
+            FROM buy_orders
+            WHERE dt >= '2024-02-01' AND dt < '2024-03-01'
+            
+            UNION ALL
+            
+            SELECT 
+                'Sell' as order_type,
+                product_name,
+                price
+            FROM sell_orders
+            WHERE dt >= '2024-02-01' AND dt < '2024-03-01'
+        ) combined_orders
+        GROUP BY order_type, product_name
+        ORDER BY order_type ASC, average_order_price DESC
+    ) aggregated_data
+    CROSS JOIN (SELECT @row_number := 0, @prev_order_type := '') r
+) ranked_data
+WHERE rn <= 3
+ORDER BY order_type ASC, average_order_price DESC;

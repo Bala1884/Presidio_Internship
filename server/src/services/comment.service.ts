@@ -1,5 +1,7 @@
 import * as commentDao from "../dao/comment.dao";
 
+
+
 export const getAllComment=async()=>await commentDao.getAll();
 
 export const getCommentById=async(id:number)=>await commentDao.findComment(id);
