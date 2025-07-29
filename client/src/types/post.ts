@@ -8,4 +8,5 @@ export interface Post {
   category:"a"|"b";
   image_urls:string[];
   user_id:number;
+  createdAt:number;
 }

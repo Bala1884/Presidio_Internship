@@ -13,16 +13,15 @@ const redis = createClient({
 redis.on('error', (err) => console.error('Redis Client Error', err));
 
 // Ensure Redis connects before proceeding
-await redis.connect();
 
-// Extend Fastify types
+export default fp(async (fastify: FastifyInstance) => {
+  await redis.connect();
+  fastify.decorate('redis', redis);
+});
+
 declare module 'fastify' {
   interface FastifyInstance {
     redis: typeof redis;
   }
 }
 
-// Register Redis as a Fastify plugin
-export default fp(async (fastify: FastifyInstance) => {
-  fastify.decorate('redis', redis);
-});

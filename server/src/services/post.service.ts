@@ -11,15 +11,10 @@ export const addPost = async (
   files: MultipartFile[],
   userId: number
 ) => {
-  console.log('>> Entered postService.addPost()');
-  console.log('Files received:', files.length);
-  console.log('User ID:', userId);
-
   const imageUrls: string[] = [];
 
   for (const file of files) {
     try {
-      console.log('>> Uploading to Cloudinary:', file.filename);
       const buffer = await file.toBuffer();
 
       const url = await new Promise<string>((resolve, reject) => {
@@ -27,11 +22,10 @@ export const addPost = async (
           { resource_type: 'image' },
           (error, result) => {
             if (error) {
-              console.error('❌ Cloudinary upload error:', error.message);
+              console.error('Cloudinary upload error:', error.message);
               return reject(new Error('Image upload failed'));
             }
             if (result?.secure_url) {
-              console.log('✅ Upload success:', result.secure_url);
               resolve(result.secure_url);
             } else {
               reject(new Error('No secure URL returned from Cloudinary'));
@@ -43,7 +37,7 @@ export const addPost = async (
 
       imageUrls.push(url);
     } catch (err: any) {
-      console.error('❌ Upload loop failed:', err.message);
+      console.error('Upload loop failed:', err.message);
       throw new Error('Failed to upload image');
     }
   }

@@ -12,8 +12,9 @@ export const register = async (data: any) => {
 };
 
 export const login = async (data: any, req: FastifyRequest, fastify:FastifyInstance) => {
-    console.log("req.jwt exists?", typeof fastify.jwt); // should print "function"
-  const user = await userDao.findUserByEmail(data.email);
+    //console.log("req.jwt exists?", typeof fastify.jwt); // should print "function"
+    try{
+      const user = await userDao.findUserByEmail(data.email);
   if (!user) throw new Error('Invalid email or password');
 
   const match = await bcrypt.compare(data.password, user.getDataValue('password'));
@@ -25,6 +26,9 @@ export const login = async (data: any, req: FastifyRequest, fastify:FastifyInsta
   });
 
   return { token, user };
+    }catch(error){
+      console.log(error); 
+    }
 };
 
 export const getAll = async () => await userDao.getAllUsers();
