@@ -20,6 +20,47 @@ export const loginUser = async (req: FastifyRequest, reply: FastifyReply, fastif
   }
 };
 
+export const refreshAccessToken = async (
+  req: FastifyRequest<{ Body: { refreshToken: string; userId: string } }>,
+  reply: FastifyReply,
+  fastify: FastifyInstance
+) => {
+  try {
+    const { refreshToken, userId } = req.body;
+
+    const isValid = await userService.verifyRefreshToken(fastify, refreshToken, userId);
+    if (!isValid) return reply.code(403).send({ message: 'Invalid refresh token' });
+
+    const decoded = fastify.jwt.decode(refreshToken) as { id: string; email: string };
+    const newAccessToken = fastify.jwt.sign({ id: Number(decoded.id), email: decoded.email }, { expiresIn: '15m' });
+
+    return reply.send({ accessToken: newAccessToken });
+  } catch (error: any) {
+    return reply.code(500).send({ message: error.message });
+  }
+};
+
+
+export const logout = async (
+  req: FastifyRequest<{ Body: { refreshToken: string } }>,
+  reply: FastifyReply,
+  fastify: FastifyInstance
+) => {
+  try {
+    const { refreshToken } = req.body;
+    const decoded = fastify.jwt.decode(refreshToken) as { id: number };
+
+    if (!decoded?.id) return reply.code(400).send({ message: 'Invalid token' });
+
+    await userService.logoutUser(fastify, decoded.id);
+
+    return reply.send({ message: 'Logged out successfully' });
+  } catch (err: any) {
+    return reply.code(500).send({ message: err.message });
+  }
+};
+
+
 export const getAllUsers = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const users = await userService.getAll();
