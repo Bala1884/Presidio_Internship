@@ -16,11 +16,10 @@ export const storeRefreshToken=async(fastify:FastifyInstance, token:string, user
     console.warn("Invalid args to storeRefreshToken:", { token, userId });
     return;
   }
-
-  console.log("✅ Storing in Redis:", `refresh:${userId}`, token);
+  console.log(token+" "+userId);
   await fastify.redis.set(`refresh:${userId}`, token, { EX: ttlSeconds });
-  // const saved=await fastify.redis.get(`refresh:${Number(userId)}`);
-  // console.log(saved);
+  const saved=await fastify.redis.get(`refresh:${Number(userId)}`);
+  console.log(saved);
   
 }
 

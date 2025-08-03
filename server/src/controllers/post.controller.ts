@@ -44,8 +44,6 @@ export const getPostById = async (req: FastifyRequest<{ Params: { id: string } }
       return reply.code(404).send({ message: "Post not found" });
     }
 
-    const user = (req as any).user; // safely extract
-
     return reply.send(post);
   } catch (error: any) {
     return reply.code(500).send({ message: error.message });
@@ -55,8 +53,17 @@ export const getPostById = async (req: FastifyRequest<{ Params: { id: string } }
 
 export const updatePost = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
   try {
-    const post = await postService.update(Number(req.params.id), req.body);
-    return reply.send(post);
+    const post=await postService.getPostById(Number(req.params.id)) as any;
+    if (!post) {
+      return reply.code(404).send({ message: "Post not found" });
+    }
+
+    if (post.user_id !== req.user.id) {
+     return reply.code(403).send({ message: 'Unauthorized access' });
+   }
+
+    const updatedPost = await postService.update(Number(req.params.id), req.body);
+    return reply.send({success:true, updatePost});
   } catch (error: any) {
     return reply.code(404).send({ message: error.message });
   }
@@ -64,6 +71,13 @@ export const updatePost = async (req: FastifyRequest<{ Params: { id: string } }>
 
 export const deletePost = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
   try {
+    const post=await postService.getPostById(Number(req.params.id))as any;
+    if(!post){
+      return reply.code(404).send({message:"Post not found"});
+    }
+    if (post.user_id !== req.user.id) {
+     return reply.code(403).send({ message: 'Unauthorized access' });
+   }
     await postService.remove(Number(req.params.id));
     return reply.send({ message: 'Post deleted' });
   } catch (error: any) {

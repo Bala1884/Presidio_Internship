@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import api from '../api/axios';
+import useAxios from '../api/axios';
 import type { Post } from '../types/post';
-
+import DOMPurify from 'dompurify';
 const PostDetails = () => {
   const { id } = useParams();
   const [post, setPost] = useState<Post | null>(null);
-
+  const axios=useAxios();
  useEffect(() => {
-  api.get(`/posts/${id}`)
+  axios.get(`/posts/${id}`)
     .then((res) => {
       console.log("Fetched post:", res.data);
       setPost(res.data);
@@ -59,9 +59,8 @@ const PostDetails = () => {
       </div>
 
       {/* Content */}
-      <div className="prose prose-lg max-w-none text-gray-800 leading-relaxed">
-        {post.content}
-      </div>
+      <p className="text-gray-700 text-sm mt-1" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }}></p>
+
     </div>
   );
 };

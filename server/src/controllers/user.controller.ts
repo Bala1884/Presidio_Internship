@@ -3,9 +3,9 @@ import * as userService from '../services/user.service';
 
 export const registerUser = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
-    const result = await userService.register(req.body);
     console.log('Register request body:', req.body);
-    return reply.code(201).send(result);
+    const result = await userService.register(req.body);
+    return reply.code(201).send({success:true,result});
   } catch (error: any) {
     return reply.code(400).send({ message: error.message });
   }
@@ -14,7 +14,7 @@ export const registerUser = async (req: FastifyRequest, reply: FastifyReply) => 
 export const loginUser = async (req: FastifyRequest, reply: FastifyReply, fastify:FastifyInstance) => {
   try {
     const result = await userService.login(req.body, req, fastify);
-    return reply.send(result);
+    return reply.send({success:true,result});
   } catch (error: any) {
     return reply.code(401).send({ message: error.message });
   }

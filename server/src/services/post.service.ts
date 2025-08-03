@@ -42,7 +42,7 @@ export const addPost = async (
     }
   }
 
-  console.log('>> Creating post in DB');
+  //console.log('>> Creating post in DB');
 
   const newPost = await Post.create({
     title: data.title,
@@ -53,7 +53,7 @@ export const addPost = async (
     image_urls: imageUrls,
   });
 
-  console.log('✅ Post created:', (newPost as any).id);
+  //console.log('✅ Post created:', (newPost as any).id);
   return newPost;
 };
 

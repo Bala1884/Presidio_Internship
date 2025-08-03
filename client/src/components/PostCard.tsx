@@ -1,6 +1,6 @@
 import type { Post } from '../types/post';
 import { Link } from 'react-router-dom';
-
+import DOMPurify from 'dompurify';
 const PostCard = ({ post }: { post: Post }) => {
   return (
     <div className="border-b py-6 flex flex-col md:flex-row gap-6 hover:bg-gray-50 px-4 md:px-8">
@@ -20,8 +20,7 @@ const PostCard = ({ post }: { post: Post }) => {
         </Link>
 
         {/* Summary or content preview */}
-        <p className="text-gray-700 text-sm line-clamp-2 mt-1">{post.content?.slice(0, 150)}...</p>
-
+        <p className="text-gray-700 text-sm line-clamp-1 mt-1" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }}></p>
         {/* Tags */}
         <div className="text-xs text-blue-600 mt-2">
           {post.tags.split(',').map((tag, i) => (

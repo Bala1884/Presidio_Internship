@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
+import useAxios from '../api/axios';
 import { fetchPosts } from '../api/post';
 import PostCard from '../components/PostCard';
 import type { Post } from '../types/post';
 
 const Home = () => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const axios=useAxios();
 
   useEffect(() => {
-    fetchPosts().then((res) => setPosts(res.data));
+    fetchPosts(axios).then((res) => setPosts(res.data));
   }, []);
 
   return (
