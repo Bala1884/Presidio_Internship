@@ -19,7 +19,7 @@ interface PostContextProviderProps {
 }
 
 const PostContextProdiver=({ children }: PostContextProviderProps)=>{
-    const [token,setToken]=useState<string>("");
+    const [token,setToken]=useState<string>(localStorage.getItem("accessToken") || "");
     const navigate=useNavigate();
     const [draftPost, setDraftPost] = useState({});
     const value={
