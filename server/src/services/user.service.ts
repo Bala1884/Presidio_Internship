@@ -25,8 +25,6 @@ export const storeRefreshToken=async(fastify:FastifyInstance, token:string, user
 
 export const verifyRefreshToken=async(fastify:FastifyInstance, token:string, userId:string)=>{
   const saved = await fastify.redis.get(`refresh:${Number(userId)}`);
-  // console.log("Expected token:", saved);
-  // console.log("Provided token:", token);
   return saved===token;
 }
 
@@ -49,6 +47,7 @@ export const login = async (data: any, req: FastifyRequest, fastify:FastifyInsta
 
   await storeRefreshToken(fastify,refreshToken,user.id);
    return {
+    id:user.id,
     message: 'Login successful',
     accessToken,
     refreshToken

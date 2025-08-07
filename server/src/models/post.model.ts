@@ -14,6 +14,11 @@ export default (sequelize: any, DataTypes: any) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      likes :{
+        type:DataTypes.INTEGER,
+        allowNull:false,
+        defaultValue:0
+      },
       tags: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -37,6 +42,7 @@ export default (sequelize: any, DataTypes: any) => {
   Post.associate = (models: any) => {
     Post.belongsTo(models.User, { foreignKey: 'user_id', as: 'author' });
     Post.hasMany(models.Comment, { foreignKey: 'post_id', as: 'comments' });
+    Post.hasMany(models.Like, { foreignKey: 'post_id', as: 'post_likes' });
   };
 
   return Post;

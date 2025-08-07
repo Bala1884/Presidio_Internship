@@ -9,6 +9,8 @@ interface PostContextType {
   backendUrl: string;
   draftPost: any;
   setDraftPost: (data: any) => void;
+  currentUserId:number;
+  setCurrentUserId:(data:any)=>void;
 }
 
 export const PostContext=createContext<PostContextType | undefined>(undefined);
@@ -22,11 +24,13 @@ const PostContextProdiver=({ children }: PostContextProviderProps)=>{
     const [token,setToken]=useState<string>(localStorage.getItem("accessToken") || "");
     const navigate=useNavigate();
     const [draftPost, setDraftPost] = useState({});
+    const [currentUserId,setCurrentUserId] = useState(-1);
     const value={
         token, setToken,
         navigate,
         backendUrl,
-        draftPost, setDraftPost
+        draftPost, setDraftPost,
+        currentUserId,setCurrentUserId
     }
     return(
         <PostContext.Provider value={value}>

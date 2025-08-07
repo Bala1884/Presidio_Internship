@@ -2,6 +2,17 @@ import type { Post } from '../types/post';
 import { Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 const PostCard = ({ post }: { post: Post }) => {
+
+  const stripHtml = (html: string) => {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+};
+
+  const getPreviewText = (html: string, wordLimit: number = 30) => {
+  const cleanText = stripHtml(html);
+  return cleanText.split(" ").slice(0, wordLimit).join(" ") + "...";
+};
   return (
     <div className="border-b py-6 flex flex-col md:flex-row gap-6 hover:bg-gray-50 px-4 md:px-8">
       {/* Left: Post info */}
@@ -19,8 +30,10 @@ const PostCard = ({ post }: { post: Post }) => {
           <h2 className="text-xl font-bold text-gray-900 hover:underline">{post.title}</h2>
         </Link>
 
-        {/* Summary or content preview */}
-        <p className="text-gray-700 text-sm line-clamp-1 mt-1" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }}></p>
+        {/* Content preview (clean text only) */}
+        <p className="text-gray-700 text-sm mt-1">
+          {getPreviewText(post.content || "", 30)}
+        </p>
         {/* Tags */}
         <div className="text-xs text-blue-600 mt-2">
           {post.tags.split(',').map((tag, i) => (

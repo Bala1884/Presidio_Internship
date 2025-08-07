@@ -5,7 +5,8 @@ export type Comment = {
   post_id: number;
   createdAt: string;
   updatedAt: string;
-  author?: {
+  author: {
     name: string;
   };
+  likes:number;
 };

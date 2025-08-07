@@ -14,7 +14,7 @@ const Login = () => {
     if (!context) {
         throw new Error("PostContext must be used within a PostContextProvider");
     }
-  const { token, setToken, navigate, backendUrl } = context;
+  const { token, setToken, navigate, backendUrl, setCurrentUserId } = context;
   const onSubmitHandler=async(event:any)=>{
     event.preventDefault();
     try{
@@ -42,6 +42,7 @@ const Login = () => {
           setToken(response.data.result.accessToken);
           localStorage.setItem('accessToken',response.data.result.accessToken);
           localStorage.setItem('refreshToken',response.data.result.refreshToken);
+          setCurrentUserId(response.data.result.id);
         }
          else{
           toast.error(response.data.message);

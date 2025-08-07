@@ -12,7 +12,7 @@ const Navbar = () => {
     if (!context) {
         throw new Error("PostContext must be used within a PostContextProvider");
     }
-  const { token, setToken, navigate, backendUrl } = context;
+  const { token, setToken, navigate, backendUrl, currentUserId } = context;
 
   const handleWrite=()=>{
     if(token){
@@ -29,7 +29,6 @@ const Navbar = () => {
         navigate('/login');
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        localStorage.removeItem('token');
         setToken('');
     }
   return (
@@ -55,6 +54,9 @@ const Navbar = () => {
                         {token && <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-8'>
                             <div className='flex flex-col gap-2 w-36 bg-slate-100 text-gray-500'>
                                 <p onClick={logout} className='cursor-pointer hover:text-black'>logout</p>
+                            </div>
+                            <div className='flex flex-col gap-2 w-36 bg-slate-100 text-gray-500'>
+                                <p onClick={()=>navigate(`/profile/${currentUserId}`)} className='cursor-pointer hover:text-black'>Profile</p>
                             </div>
                         </div>}
                     </div>

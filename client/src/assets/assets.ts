@@ -6,6 +6,7 @@ import menu_icon from './menu_icon.png'
 import cross_icon from './cross_icon.png'
 import cart_icon from './cart_icon.png'
 import write_icon from './write_icon.png'
+import deleteIcon from './delete.png'
 export const assets = {
     logo,
     dropdown_icon,
@@ -14,5 +15,6 @@ export const assets = {
     menu_icon,
     cross_icon,
     cart_icon,
-    write_icon
+    write_icon,
+    deleteIcon
 }

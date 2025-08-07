@@ -49,6 +49,18 @@ export const getPostById = async (req: FastifyRequest<{ Params: { id: string } }
     return reply.code(500).send({ message: error.message });
   }
 };
+export const getPostsByUser = async (
+  req: FastifyRequest<{ Params: { id: number } }>,
+  reply: FastifyReply
+) => {
+  try {
+    const userId = (req.params as any).id;
+    const posts = await postService.getPostsByUserId(userId);
+    return reply.send({ data: posts });
+  } catch (error: any) {
+    return reply.code(500).send({ success: false, message: error.message });
+  }
+};
 
 
 export const updatePost = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {

@@ -9,11 +9,16 @@ import fastify_jwt from "@fastify/jwt";
 import { postRouter } from './routes/post.route';
 import { commentRouter } from './routes/comment.route';
 import cors from '@fastify/cors'
+import { likeRouter } from './routes/like.route';
 dotenv.config();
 
 const fastify = Fastify({ logger: true });
 
-await fastify.register(cors);
+await fastify.register(cors, {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+});
 
 fastify.register(fastify_jwt, {
   secret: process.env.JWT_SECRET as string,
@@ -26,6 +31,7 @@ fastify.register(redisPlugin);
 fastify.register(userRouter, { prefix: '/api/users' });
 fastify.register(postRouter,{prefix:'/api/posts'});
 fastify.register(commentRouter,{prefix:'/api/comments'});
+fastify.register(likeRouter,{prefix:'/api/likes'});
 
 fastify.get('/', async (request, reply) => {
   return reply.send("hello world");

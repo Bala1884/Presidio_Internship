@@ -7,6 +7,7 @@ import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TextEditor from './pages/CreatePost';
 import PublishPost from './pages/PublishPost';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/post/:id" element={<PostDetails />} />
         <Route path="add-post" element={<TextEditor/>}/>
         <Route path="/publish" element={<PublishPost/>}/>
+        <Route path='/profile/:id' element={<UserProfile/>}/>
       </Routes>
     </div>
   );

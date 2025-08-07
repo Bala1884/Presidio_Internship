@@ -29,6 +29,7 @@ export default (sequelize: any, DataTypes: any) => {
   User.associate = (models: any) => {
     User.hasMany(models.Post, { foreignKey: 'user_id', as: 'posts' });
     User.hasMany(models.Comment, { foreignKey: 'user_id', as: 'comments' });
+    User.hasMany(models.Like, {foreinKey:'user_id', as:'likes'})
   };
 
   return User;

@@ -53,7 +53,7 @@ export const addPost = async (
     image_urls: imageUrls,
   });
 
-  //console.log('✅ Post created:', (newPost as any).id);
+  //console.log('Post created:', (newPost as any).id);
   return newPost;
 };
 
@@ -80,7 +80,17 @@ export const getAllPost = async () => {
 };
 
 export const getPostById = async (id: number) => {
-  return await postDao.findPost(id);
+  const post= await postDao.findPost(id);
+  if (!post) throw new Error('Post not found');
+  const plainPost = post.toJSON();
+  return {
+    ...plainPost,
+    author: plainPost.author?.name || 'Unknown'
+  };
+};
+
+export const getPostsByUserId = async (userId: number) => {
+  return await postDao.findByUserId(userId);
 };
 
 export const update = async (id: number, data: any) => {
